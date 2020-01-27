@@ -4,37 +4,35 @@ import axios from 'axios';
 function FileUpload() {
   const [file, setFile] = useState(''); // storing the uploaded file
   // storing the recived file from backend
-  const [data, getFile] = useState();
-  const [progress, setProgess] = useState(0); // progess bar
+  const [data, getFile] = useState([]);
   // const el = useRef(); // accesing input element
 
   const handleChange = (e) => {
-    e.preventDefault()
-    setProgess(0)
     const file = e.target.files[0]; // accesing file
-    console.log(file);
+    // console.log(file);
     setFile(file); // storing file
   }
 
   const uploadFile = () => {
     const formData = new FormData();
     formData.append('file', file); // appending file
-    axios.post('http://localhost:5000/upload', formData, {
-        onUploadProgress: (ProgressEvent) => {
-            let progress = Math.round(
-            ProgressEvent.loaded / ProgressEvent.total * 100) + '%';
-            setProgess(progress);
-        }
-    }).then(res => {
-        console.log(res.data);
-        getFile(res.data)
-    }).catch(err => console.log(err))
+    axios.post('http://localhost:5000/upload', formData)
+      .then(res => {
+          console.log(res.data);
+          getFile(res.data)
+      })
+      .catch(err => console.log(err))
+    // axios.get('https://swapi.co/api/people')
+    //   .then(res => {
+    //     console.log(res.data)
+    //     getFile(res.data.results)
+    //   })
   }
 
-  const displayData = !data ? null : data.map(item => {
+  const displayData = data.map(item => {
     const index = item.CRN
     return (
-      <div key={index}>
+      <div key={index} className="data-item">
         <p>{item["Building and Room"]}</p>
         <p>{item.CRN}</p>
         <p>{item.Course}</p>
@@ -51,16 +49,14 @@ function FileUpload() {
       </div>
     )
   })
+  // console.log(data[0])
   return (
       <div>
           <div className="file-upload">
               <input type="file" onChange={handleChange} />
-              <div className="progessBar" style={{ width: progress }}>
-                {progress}
-              </div>
               <button onClick={uploadFile} className="upbutton">Upload</button>
           <hr />
-          {displayData}
+          {displayData ? displayData : null}
           </div>
       </div>
   );

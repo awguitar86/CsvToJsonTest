@@ -30,6 +30,7 @@ app.post('/upload', (req, res) => {
   csv()
     .fromFile(csvFilePath)
     .then((jsonObj) => {
+      // console.log(jsonObj)
       return res.send(jsonObj)
     })
 })
