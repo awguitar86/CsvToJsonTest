@@ -13,15 +13,18 @@ function FileUpload() {
     setFile(file); // storing file
   }
 
-  const uploadFile = () => {
+  const uploadFile = async () => {
     const formData = new FormData();
     formData.append('file', file); // appending file
-    axios.post('http://localhost:5000/upload', formData)
-      .then(res => {
-          console.log(res.data);
-          getFile(res.data)
-      })
-      .catch(err => console.log(err))
+    try {
+      const fileData = await axios.post('http://localhost:5000/upload', formData)
+      console.log(fileData.data)
+      getFile(fileData.data)
+    } catch (err) {
+      console.log(err)
+      // next(err)
+    }
+      // .catch(err => console.log(err))
     // axios.get('https://swapi.co/api/people')
     //   .then(res => {
     //     console.log(res.data)
